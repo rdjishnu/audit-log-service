@@ -9,3 +9,7 @@ A centralized, immutable event log REST API for backend systems. This service ac
 
 ## Overview (Work in Progress - 7 Day Build)
 Currently under development. This standalone service ingests business events (e.g., `PAYMENT_FAILED`, `USER_REGISTERED`) and provides robust querying and aggregation capabilities. Built to be dependency-light, relying purely on Java and Postgres without external message brokers.
+## Key Features
+* **Append-Only Event Store**: Designed strictly for event ingestion without update or delete mutations.
+* **Flexible Metadata**: Leverages PostgreSQL `JSONB` to efficiently store unstructured event payloads from upstream microservices.
+* **REST-Driven**: Lightweight HTTP API for seamless integration with other system components.
