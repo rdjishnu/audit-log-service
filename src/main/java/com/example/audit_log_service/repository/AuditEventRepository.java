@@ -1,5 +1,6 @@
 package com.example.audit_log_service.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +10,8 @@ import com.example.audit_log_service.model.AuditEvent;
 
 @Repository
 public interface AuditEventRepository extends JpaRepository<AuditEvent, UUID> {
+    
+    // Spring automatically generates the SQL to find these and sort them by newest first
+    List<AuditEvent> findByEntityIdOrderByTimestampDesc(String entityId);
+    List<AuditEvent> findByActorOrderByTimestampDesc(String actor);
 }
