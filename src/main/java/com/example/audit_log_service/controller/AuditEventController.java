@@ -1,7 +1,9 @@
 package com.example.audit_log_service.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +18,7 @@ import com.example.audit_log_service.model.AuditEvent;
 import com.example.audit_log_service.repository.AuditEventRepository;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor; // Added this import
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/events")
@@ -39,18 +41,24 @@ public class AuditEventController {
         return auditEventRepository.save(event);
     }
 
-    @GetMapping
-    public List<AuditEvent> getEvents(
+   @GetMapping
+    public Page<AuditEvent> getEvents(
             @RequestParam(required = false) String entityId,
-            @RequestParam(required = false) String actor) {
+            @RequestParam(required = false) String actor,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        
+        // This tells Spring to grab the specific page, limit the size, and sort by newest first
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "timestamp"));
         
         if (entityId != null) {
-            return auditEventRepository.findByEntityIdOrderByTimestampDesc(entityId);
+            return auditEventRepository.findByEntityId(entityId, pageable);
         }
         if (actor != null) {
-            return auditEventRepository.findByActorOrderByTimestampDesc(actor);
+            return auditEventRepository.findByActor(actor, pageable);
         }
         
-        return auditEventRepository.findAll();
+        return auditEventRepository.findAll(pageable);
+    
     }
 }
