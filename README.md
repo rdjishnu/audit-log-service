@@ -18,4 +18,4 @@ Currently under development. This standalone service ingests business events (e.
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `POST` | `/api/events` | Ingests and validates a new audit event. |
-| `GET` | `/api/events` | Retrieves logs (supports filtering by `?entityId=` or `?actor=`). |
+| `GET` | `/api/events` | Retrieves logs
