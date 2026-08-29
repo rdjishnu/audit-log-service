@@ -1,5 +1,6 @@
 package com.example.audit_log_service.repository;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -11,8 +12,8 @@ import com.example.audit_log_service.model.AuditEvent;
 
 @Repository
 public interface AuditEventRepository extends JpaRepository<AuditEvent, UUID> {
-    
-    // We removed "OrderByTimestampDesc" from the name because Pageable handles sorting for us!
     Page<AuditEvent> findByEntityId(String entityId, Pageable pageable);
     Page<AuditEvent> findByActor(String actor, Pageable pageable);
+    Page<AuditEvent> findByAction(String action, Pageable pageable);
+    Page<AuditEvent> findByTimestampBetween(Instant startDate, Instant endDate, Pageable pageable);
 }

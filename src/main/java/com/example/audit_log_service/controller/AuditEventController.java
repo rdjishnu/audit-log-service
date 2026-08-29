@@ -1,5 +1,7 @@
 package com.example.audit_log_service.controller;
 
+import java.time.Instant;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,20 +47,27 @@ public class AuditEventController {
     public Page<AuditEvent> getEvents(
             @RequestParam(required = false) String entityId,
             @RequestParam(required = false) String actor,
+            @RequestParam(required = false) String action,
+            @RequestParam(required = false) Instant startDate,
+            @RequestParam(required = false) Instant endDate,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
-        // This tells Spring to grab the specific page, limit the size, and sort by newest first
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "timestamp"));
-        
+
         if (entityId != null) {
             return auditEventRepository.findByEntityId(entityId, pageable);
         }
         if (actor != null) {
             return auditEventRepository.findByActor(actor, pageable);
         }
-        
+        if (action != null) {
+            return auditEventRepository.findByAction(action, pageable);
+        }
+        if (startDate != null && endDate != null) {
+            return auditEventRepository.findByTimestampBetween(startDate, endDate, pageable);
+        }
+
         return auditEventRepository.findAll(pageable);
-    
     }
 }
